@@ -154,7 +154,7 @@ int main(int argc, const char **argv)
         {
             angle -= 10;
         }
-        printf("%d\n", key);
+        // printf("%d\n", key);
     }
 
     return 0;

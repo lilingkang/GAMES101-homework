@@ -129,7 +129,7 @@ int main(int argc, const char **argv)
         return 0;
     }
 
-    while (key != 27)
+    while (true)
     {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 

@@ -41,6 +41,10 @@
         "dense": "cpp",
         "cholesky": "cpp",
         "eigenvalues": "cpp",
-        "core": "cpp"
+        "core": "cpp",
+        "ctime": "cpp",
+        "list": "cpp",
+        "iomanip": "cpp",
+        "memory": "cpp"
     }
 }

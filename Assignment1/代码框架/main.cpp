@@ -26,28 +26,26 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     // TODO: Implement this function
     // Create the model matrix for rotating the triangle around the Z axis.
     // Then return it.
-    Eigen::Matrix4f rotMatrix;
-    rotMatrix << std::cos(rotation_angle), -std::sin(rotation_angle), 0, 0,
+    rotation_angle = rotation_angle / 180.0f * MY_PI;
+    model << std::cos(rotation_angle), -std::sin(rotation_angle), 0, 0,
         std::sin(rotation_angle), std::cos(rotation_angle), 0, 0,
         0, 0, 1, 0,
         0, 0, 0, 1;
-
-    model = model * rotation_angle;
 
     return model;
 }
 
 /**
  * @brief Get the projection matrix object
- * 
+ *
  * @param eye_fov Y轴可视角度
  * @param aspect_ratio 长宽比
- * @param zNear 
- * @param zFar 
- * @return Eigen::Matrix4f 
+ * @param zNear
+ * @param zFar
+ * @return Eigen::Matrix4f
  */
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
-                                      float zNear, float zFar)
+                                      float n, float f)
 {
     // Students will implement this function
 
@@ -56,7 +54,28 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // TODO: Implement this function
     // Create the projection matrix for the given parameters.
     // Then return it.
+    float t = std::tan((eye_fov / 360.0f) * MY_PI) * std::abs(n);
+    float r = t / aspect_ratio;
 
+    Eigen::Matrix4f Mp; // 透视矩阵
+    Mp << n, 0, 0, 0,
+        0, n, 0, 0,
+        0, 0, n + f, -n * f,
+        0, 0, 1, 0;
+
+    Eigen::Matrix4f Mo_tran; // 正交（平移）矩阵
+    Mo_tran << 1, 0, 0, 0,   // r = -l
+        0, 1, 0, 0,          // t = -b
+        0, 0, 1, -(n + f) / 2,
+        0, 0, 0, 1;
+
+    Eigen::Matrix4f Mo_scale; // 正交（旋转）矩阵
+    Mo_scale << 1 / r, 0, 0, 0,
+        0, 1 / t, 0, 0,
+        0, 0, 2 / (n - f), 0,
+        0, 0, 0, 1;
+
+    projection = (Mo_scale * Mo_tran) * Mp; // 透视投影矩阵
 
     return projection;
 }
@@ -135,6 +154,7 @@ int main(int argc, const char **argv)
         {
             angle -= 10;
         }
+        printf("%d\n", key);
     }
 
     return 0;
